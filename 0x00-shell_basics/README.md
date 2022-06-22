@@ -1,1 +1,1 @@
-a script that prints the type of the file named iamafile
+Create a script that deletes all files in the current working directory that end with the character ~

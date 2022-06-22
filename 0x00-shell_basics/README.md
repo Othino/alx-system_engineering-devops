@@ -1,1 +1,1 @@
-Display current directory contents in a long format
+a script that prints the type of the file named iamafile

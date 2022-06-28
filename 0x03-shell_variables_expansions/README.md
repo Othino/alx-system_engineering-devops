@@ -22,3 +22,4 @@
 | `100-rot13` | Encodes and decodes text using the rot13 encryption |
 | `101-odd` | Prints every other line from the input, starting with the first line |
 | `102-water_and_str` | Adds the two numbers stored in the environment variables `WATER` and `STIR` and prints the result |
+

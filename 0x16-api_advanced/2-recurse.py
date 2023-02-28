@@ -2,30 +2,34 @@
 """
 @author: Micah
 """
-
-from json import loads
-from requests import get
+import requests
 
 
-def recurse(subreddit, hot_list=[]):
-    """recursive function that queries the Reddit API and returns a list
-    containing the titles of all hot articles for a given subreddit. If no
-    results are found for the given subreddit, the function should return None.
+def recurse(subreddit, hot_list=[], after=""):
     """
-    url = 'https://www.reddit.com/r/{}/hot.json'.format(subreddit)
-    headers = {
-        'User-Agent':
-        'Mozilla/5.0 (Windows; U; Windows NT 5.1; de; rv:1.9.2.3) \
-        Gecko/20100401 Firefox/3.6.3 (FM Scene 4.6.1)'
-    }
-    response = get(url, headers=headers, allow_redirects=False)
-    reddits = response.json()
-
-    try:
-        children = reddits.get('data').get('children')
-        for title in children:
-            hot_list.append(title.get('data').get('title'))
+    GET all titles of hot articles for a given subreddit.
+    Store results in hot_list provided as default to method.
+    Requires recursive request stores.
+    """
+    if (after is None):
         return hot_list
-    except:
-        print(None)
-        return 0
+
+    if (len(hot_list) == 0):
+        url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
+    else:
+        url = "https://www.reddit.com/r/{}/hot.json?after={}".format(
+            subreddit, after)
+    headers = {'user-agent': 'philsrequest'}
+
+    r = requests.get(url, headers=headers)
+    if (r.status_code is 404):
+        return None
+    elif 'data' not in r.json():
+        return None
+    else:
+        r = r.json()
+        for post in r['data']['children']:
+            hot_list.append(post['data']['title'])
+
+    after = r['data']['after']
+    return recurse(subreddit, hot_list, after)
